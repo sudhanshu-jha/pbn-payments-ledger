@@ -119,7 +119,9 @@ Add `--fast` to skip the 15 s settlement wait for the `0341` test values. The co
 posts over real HTTP to `PROCESSOR_WEBHOOK_URL`; every delivery carries
 `X-Processor-Signature`.
 
-**4. Read it back**: `GET /api/payments/{id}` returns the current status plus the full ledger.
+**4. Read it back**: `GET /api/payments/{id}` returns the current status plus the full ledger,
+and **http://localhost:8000/payments** is a read-only React page listing payments with each
+one's ledger history (masked references only).
 The admin (`/admin/`, create a superuser with `docker compose run --rm backend python manage.py createsuperuser`)
 shows payments, ledger entries, the webhook inbox and idempotency keys, all read-only.
 
@@ -284,4 +286,5 @@ sums to a balance. A refund is: a new status reachable from `succeeded`, a new
 - **Boilerplate fixes**: `postgres:alpine` is pinned to `postgres:16-alpine` (the
   unpinned 18 image refuses the compose file's data mount layout); `manage.py test`
   now *forces* the test settings module (inside compose the env file otherwise wins);
-  CI runs against a Postgres service instead of SQLite.
+  CI runs against a Postgres service instead of SQLite; `globals` was added as a dev
+  dependency because `eslint.config.mjs` imports it but the boilerplate never declared it.
