@@ -15,7 +15,7 @@ SITE_ID = 1
 
 DEBUG = True
 
-ADMINS = (("Admin", "foo@example.com"),)
+ADMINS = (("Sudhanshu Jha", "jha.sudhanshu1991@gmail.com"),)
 
 AUTH_USER_MODEL = "users.User"
 
