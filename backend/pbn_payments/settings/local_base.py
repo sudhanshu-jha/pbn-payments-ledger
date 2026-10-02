@@ -5,6 +5,9 @@ DEBUG = True
 
 HOST = "http://localhost:8000"
 
+# "backend" is the compose service name: simulate_webhooks posts to it from another container.
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "0.0.0.0", "backend"]  # noqa: S104
+
 SECRET_KEY = "secret"  # noqa: S105
 
 STATIC_ROOT = base_dir_join("staticfiles")

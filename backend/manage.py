@@ -15,7 +15,10 @@ if __name__ == "__main__":
                 "Ignoring config('DJANGO_SETTINGS_MODULE') because it's test. "
                 "Using 'pbn_payments.settings.test'"
             )
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pbn_payments.settings.test")
+        # Force (not setdefault): inside docker compose the env_file exports
+        # DJANGO_SETTINGS_MODULE=...local, which would otherwise win over the
+        # test settings and make the suite behave differently in Docker.
+        os.environ["DJANGO_SETTINGS_MODULE"] = "pbn_payments.settings.test"
     else:
         if settings_module is None:
             print(

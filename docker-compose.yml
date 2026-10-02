@@ -1,6 +1,6 @@
 services:
   db:
-    image: "postgres:alpine"
+    image: "postgres:16-alpine"  # pinned: 18+ images change the data-dir layout and refuse this mount
     environment:
       - POSTGRES_USER=pbn_payments
       - POSTGRES_PASSWORD=password
