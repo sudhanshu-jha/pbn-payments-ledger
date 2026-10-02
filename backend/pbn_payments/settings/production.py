@@ -85,6 +85,7 @@ LOGGING = {
         "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
         "request_id": {"()": "log_request_id.filters.RequestIDFilter"},
         "correlation_id": {"()": "django_guid.log_filters.CorrelationId"},
+        "sensitive_data": {"()": "payments.logging_filters.SensitiveDataFilter"},
     },
     "formatters": {
         "standard": {
@@ -103,7 +104,7 @@ LOGGING = {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
-            "filters": ["request_id", "correlation_id"],
+            "filters": ["request_id", "correlation_id", "sensitive_data"],
             "formatter": "standard",
         },
     },

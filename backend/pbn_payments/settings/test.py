@@ -26,3 +26,22 @@ PASSWORD_HASHERS = [
 # Celery
 CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
+
+# Deterministic webhook secret for the test-suite (never used outside tests)
+PROCESSOR_WEBHOOK_SECRET = "test-webhook-secret"  # noqa: S105
+
+# Capture everything at DEBUG with the sensitive-data scrubber attached, exactly as
+# in local/production, so the "nothing sensitive in logs" test exercises real config.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "sensitive_data": {"()": "payments.logging_filters.SensitiveDataFilter"},
+    },
+    "handlers": {
+        "null": {"class": "logging.NullHandler", "filters": ["sensitive_data"]},
+    },
+    "loggers": {
+        "": {"handlers": ["null"], "level": "DEBUG"},
+    },
+}

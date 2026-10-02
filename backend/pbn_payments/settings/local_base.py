@@ -40,6 +40,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "filters": {
         "correlation_id": {"()": "django_guid.log_filters.CorrelationId"},
+        "sensitive_data": {"()": "payments.logging_filters.SensitiveDataFilter"},
     },
     "formatters": {
         "standard": {
@@ -51,7 +52,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "standard",
-            "filters": ["correlation_id"],
+            "filters": ["correlation_id", "sensitive_data"],
         },
     },
     "loggers": {
