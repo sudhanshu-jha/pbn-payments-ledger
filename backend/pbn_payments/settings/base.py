@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "django_guid",
     "common",
     "users",
+    "mock_processor",
+    "payments",
 ]
 
 MIDDLEWARE = [
@@ -178,6 +180,14 @@ CELERY_WORKER_MAX_TASKS_PER_CHILD = config(
 CELERY_WORKER_SEND_TASK_EVENTS = config("CELERY_WORKER_SEND_TASK_EVENTS", cast=bool, default=True)
 CELERY_EVENT_QUEUE_EXPIRES = config("CELERY_EVENT_QUEUE_EXPIRES", cast=float, default=60.0)
 CELERY_EVENT_QUEUE_TTL = config("CELERY_EVENT_QUEUE_TTL", cast=float, default=5.0)
+
+# Payment processor integration
+# Shared HMAC secret for webhook signatures. Empty means "reject every webhook" (fail closed).
+PROCESSOR_WEBHOOK_SECRET = config("PROCESSOR_WEBHOOK_SECRET", default="")
+# Where the simulated processor delivers webhooks (used by `simulate_webhooks`).
+PROCESSOR_WEBHOOK_URL = config(
+    "PROCESSOR_WEBHOOK_URL", default="http://localhost:8000/webhooks/processor"
+)
 
 # Sentry
 SENTRY_DSN = config("SENTRY_DSN", default="")
