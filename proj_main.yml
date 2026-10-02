@@ -13,9 +13,26 @@ jobs:
         python: [3.12]
         node: [22.20]
     env:
-      DATABASE_URL: "sqlite:///"
+      # The ledger relies on Postgres features (row locks, triggers, partial
+      # unique indexes), so CI runs against a real Postgres service.
+      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/pbn_payments"
       REDIS_URL: "redis://"
+      PROCESSOR_WEBHOOK_SECRET: "ci-webhook-secret"
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pbn_payments
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - name: Checkout code
@@ -127,7 +144,7 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: "pbn_payments.settings.local_base"
           SECRET_KEY: ${{ steps.secret_id_generator.outputs.SECRET_KEY }}
-          DATABASE_URL: "sqlite:///"
+          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/pbn_payments"
           ALLOWED_HOSTS: ".example.org"
           SENDGRID_USERNAME: "test"
           SENDGRID_PASSWORD: "test"
@@ -146,7 +163,7 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: "pbn_payments.settings.production"
           SECRET_KEY: ${{ steps.secret_id_generator.outputs.SECRET_KEY }}
-          DATABASE_URL: "sqlite:///"
+          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/pbn_payments"
           ALLOWED_HOSTS: ".example.org"
           SENDGRID_USERNAME: "test"
           SENDGRID_PASSWORD: "test"
@@ -160,7 +177,7 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: "pbn_payments.settings.production"
           SECRET_KEY: ${{ steps.secret_id_generator.outputs.SECRET_KEY }}
-          DATABASE_URL: "sqlite:///"
+          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/pbn_payments"
           ALLOWED_HOSTS: ".example.org"
           SENDGRID_USERNAME: "test"
           SENDGRID_PASSWORD: "test"
