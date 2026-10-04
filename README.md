@@ -31,7 +31,8 @@ boilerplate; everything after it is the assignment.
 Prerequisites: Docker Desktop (or Docker Engine + Compose v2), `make`.
 
 ```bash
-cp backend/.env.example backend/.env       # placeholders only; see "Secrets" below
+cp backend/.env.example backend/.env                                        # placeholders only; see "Secrets" below
+cp backend/pbn_payments/settings/local.py.example backend/pbn_payments/settings/local.py   # git-untracked local settings
 make docker_setup                           # builds images, generates the OpenAPI schema + TS client
 make docker_migrate
 make docker_up                              # http://localhost:8000
