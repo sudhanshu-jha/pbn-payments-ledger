@@ -1,4 +1,4 @@
-# pbn-payments-ledger — Idempotent Payment Ledger (Senior SWE take-home)
+# pbn-payments-ledger — Idempotent Payment Ledger
 
 A small payments service that models a payment's lifecycle on an **append-only
 ledger** and proves with tests that duplicate, concurrent and out-of-order
