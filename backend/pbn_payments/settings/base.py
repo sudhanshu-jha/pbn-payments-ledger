@@ -125,6 +125,9 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "A Django project boilerplate with Vinta's best practices",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    # Explicit: auto-detection collapses to "/" once non-/api routes (processor, webhooks)
+    # exist, which prefixes every generated TS client function with "api".
+    "SCHEMA_PATH_PREFIX": "/api/",
 }
 
 LANGUAGE_CODE = "en-us"

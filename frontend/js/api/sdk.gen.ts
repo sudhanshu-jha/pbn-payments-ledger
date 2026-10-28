@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { RestRestCheckRetrieveData, RestRestCheckRetrieveResponses, UsersCreateData, UsersCreateResponses, UsersDestroyData, UsersDestroyResponses, UsersListData, UsersListResponses, UsersPartialUpdateData, UsersPartialUpdateResponses, UsersRetrieveData, UsersRetrieveResponses, UsersUpdateData, UsersUpdateResponses } from './types.gen';
+import type { PaymentsCreateData, PaymentsCreateResponses, PaymentsReplayCreateData, PaymentsReplayCreateResponses, PaymentsRetrieve2Data, PaymentsRetrieve2Responses, PaymentsRetrieveData, PaymentsRetrieveResponses, ProcessorTokenizeCreateData, ProcessorTokenizeCreateResponses, RestRestCheckRetrieveData, RestRestCheckRetrieveResponses, UsersCreateData, UsersCreateResponses, UsersDestroyData, UsersDestroyResponses, UsersListData, UsersListResponses, UsersPartialUpdateData, UsersPartialUpdateResponses, UsersRetrieveData, UsersRetrieveResponses, UsersUpdateData, UsersUpdateResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -16,6 +16,58 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      * used to access values that aren't defined as part of the SDK function.
      */
     meta?: Record<string, unknown>;
+};
+
+/**
+ * POST /api/payments (idempotent) and GET /api/payments (list, for the UI).
+ */
+export const paymentsRetrieve = <ThrowOnError extends boolean = false>(options?: Options<PaymentsRetrieveData, ThrowOnError>) => {
+    return (options?.client ?? client).get<PaymentsRetrieveResponses, unknown, ThrowOnError>({
+        url: '/api/payments/',
+        ...options
+    });
+};
+
+/**
+ * POST /api/payments (idempotent) and GET /api/payments (list, for the UI).
+ */
+export const paymentsCreate = <ThrowOnError extends boolean = false>(options?: Options<PaymentsCreateData, ThrowOnError>) => {
+    return (options?.client ?? client).post<PaymentsCreateResponses, unknown, ThrowOnError>({
+        url: '/api/payments/',
+        ...options
+    });
+};
+
+/**
+ * GET /api/payments/{id}: current status plus full ledger history.
+ */
+export const paymentsRetrieve2 = <ThrowOnError extends boolean = false>(options: Options<PaymentsRetrieve2Data, ThrowOnError>) => {
+    return (options.client ?? client).get<PaymentsRetrieve2Responses, unknown, ThrowOnError>({
+        url: '/api/payments/{payment_id}/',
+        ...options
+    });
+};
+
+/**
+ * POST /api/payments/{id}/replay (admin only).
+ *
+ * Re-requests the processor's final event for a stuck (pending) payment and
+ * feeds it through the exact same receiver pipeline as a live webhook:
+ * signature check, inbox dedup, state machine. The processor re-issues the
+ * event byte-for-byte (same event_id), so replaying can never double-process.
+ */
+export const paymentsReplayCreate = <ThrowOnError extends boolean = false>(options: Options<PaymentsReplayCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<PaymentsReplayCreateResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/payments/{payment_id}/replay/',
+        ...options
+    });
 };
 
 /**
@@ -136,5 +188,18 @@ export const usersUpdate = <ThrowOnError extends boolean = false>(options: Optio
             'Content-Type': 'application/json',
             ...options.headers
         }
+    });
+};
+
+/**
+ * POST /processor/tokenize — the processor-hosted card/bank field.
+ *
+ * Raw card/bank details are accepted here and only here. They are validated,
+ * reduced to a token + last4, and discarded. Nothing here logs the request body.
+ */
+export const processorTokenizeCreate = <ThrowOnError extends boolean = false>(options?: Options<ProcessorTokenizeCreateData, ThrowOnError>) => {
+    return (options?.client ?? client).post<ProcessorTokenizeCreateResponses, unknown, ThrowOnError>({
+        url: '/processor/tokenize/',
+        ...options
     });
 };
