@@ -11,7 +11,7 @@ services:
       - dbdata:/var/lib/postgresql/data:delegated
 
   broker:
-    image: "rabbitmq:alpine"
+    image: "rabbitmq:3.13-alpine"  # pinned: 4.x refuses Celery's transient non-exclusive pidbox queues
 
   result:
     image: "redis:alpine"
