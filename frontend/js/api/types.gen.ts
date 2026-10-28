@@ -97,6 +97,66 @@ export type UserWritable = {
     last_login?: string | null;
 };
 
+export type PaymentsRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/payments/';
+};
+
+export type PaymentsRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type PaymentsCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/payments/';
+};
+
+export type PaymentsCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type PaymentsRetrieve2Data = {
+    body?: never;
+    path: {
+        payment_id: string;
+    };
+    query?: never;
+    url: '/api/payments/{payment_id}/';
+};
+
+export type PaymentsRetrieve2Responses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type PaymentsReplayCreateData = {
+    body?: never;
+    path: {
+        payment_id: string;
+    };
+    query?: never;
+    url: '/api/payments/{payment_id}/replay/';
+};
+
+export type PaymentsReplayCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
 export type RestRestCheckRetrieveData = {
     body?: never;
     path?: never;
@@ -219,3 +279,17 @@ export type UsersUpdateResponses = {
 };
 
 export type UsersUpdateResponse = UsersUpdateResponses[keyof UsersUpdateResponses];
+
+export type ProcessorTokenizeCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/processor/tokenize/';
+};
+
+export type ProcessorTokenizeCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};

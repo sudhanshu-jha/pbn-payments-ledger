@@ -4,6 +4,71 @@ info:
   version: 0.1.0
   description: A Django project boilerplate with Vinta's best practices
 paths:
+  /api/payments/:
+    get:
+      operationId: payments_retrieve
+      description: POST /api/payments (idempotent) and GET /api/payments (list, for
+        the UI).
+      tags:
+      - payments
+      security:
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: payments_create
+      description: POST /api/payments (idempotent) and GET /api/payments (list, for
+        the UI).
+      tags:
+      - payments
+      security:
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/payments/{payment_id}/:
+    get:
+      operationId: payments_retrieve_2
+      description: 'GET /api/payments/{id}: current status plus full ledger history.'
+      parameters:
+      - in: path
+        name: payment_id
+        schema:
+          type: string
+          pattern: ^[0-9a-f-]{36}$
+        required: true
+      tags:
+      - payments
+      security:
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/payments/{payment_id}/replay/:
+    post:
+      operationId: payments_replay_create
+      description: |-
+        POST /api/payments/{id}/replay (admin only).
+
+        Re-requests the processor's final event for a stuck (pending) payment and
+        feeds it through the exact same receiver pipeline as a live webhook:
+        signature check, inbox dedup, state machine. The processor re-issues the
+        event byte-for-byte (same event_id), so replaying can never double-process.
+      parameters:
+      - in: path
+        name: payment_id
+        schema:
+          type: string
+          pattern: ^[0-9a-f-]{36}$
+        required: true
+      tags:
+      - payments
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/rest/rest-check/:
     get:
       operationId: rest_rest_check_retrieve
@@ -178,6 +243,21 @@ paths:
       - cookieAuth: []
       responses:
         '204':
+          description: No response body
+  /processor/tokenize/:
+    post:
+      operationId: processor_tokenize_create
+      description: |-
+        POST /processor/tokenize — the processor-hosted card/bank field.
+
+        Raw card/bank details are accepted here and only here. They are validated,
+        reduced to a token + last4, and discarded. Nothing here logs the request body.
+      tags:
+      - processor
+      security:
+      - {}
+      responses:
+        '200':
           description: No response body
 components:
   schemas:
